@@ -18,7 +18,7 @@ class ProductTable extends React.Component <Ip, Is> {
 
   constructor(props: Ip) {
     super(props);
-    this.set_sorted_props(this.props.products, '', true);
+    this.set_sorted_props(this.props.products, '', false);
   }
 
   componentWillReceiveProps(nextProps: Ip) {
@@ -52,10 +52,12 @@ class ProductTable extends React.Component <Ip, Is> {
   //   R.filter(({name}: Product) => !!R.match(new RegExp(searchText, 'i'), name)),
   //   R.groupBy(({category}: Product) => category)
   // )(products)
-
+  // pipe<V0, T1, T2>(fn0: (x0: V0) => T1, fn1: (x: T1) => T2): (x0: V0) => T2;
+  // pipe<V0, T1, T2, T3>(fn0: (x: V0) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3): (x: V0) => T3;
   private set_sorted_props(products: Array<Product>, searchText: string, onlyStocked: boolean): void {
-    this.sortedProps = R.pipe<Array<Product>, Array<Product>, sortedProps>(
+    this.sortedProps = R.pipe<Array<Product>, Array<Product>, Array<Product>, sortedProps>(
       R.filter(({name}: Product) => !!R.match(new RegExp(searchText, 'i'), name)),
+      R.filter(({stocked}: Product) => stocked === onlyStocked || !onlyStocked),
       R.groupBy(({category}: Product) => category)
     )(products);
   }
