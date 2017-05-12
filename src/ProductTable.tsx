@@ -3,8 +3,10 @@ import * as R from 'ramda';
 import {Product} from './index';
 import ProductCategoryRow from './ProductCategoryRow';
 import ProductRow from './ProductRow';
+import {HTMLProps} from 'react';
+import ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
-interface Ip {
+interface Ip extends HTMLProps<HTMLTableElement> {
   products: Array<Product>;
   searchText: string;
   onlyStocked: boolean;
@@ -14,11 +16,15 @@ interface Is {}
 type sortedProps = { [p: string]: Array<Product> };
 
 class ProductTable extends React.Component <Ip, Is> {
+  static defaultProps = {
+    className: ''
+  };
+
   private sortedProps: sortedProps;
 
   constructor(props: Ip) {
     super(props);
-    this.set_sorted_props(this.props.products, '', false);
+    this.set_sorted_props(this.props.products, '', this.props.onlyStocked);
   }
 
   componentWillReceiveProps(nextProps: Ip) {
@@ -27,37 +33,54 @@ class ProductTable extends React.Component <Ip, Is> {
 
   render() {
     return(
-      <table>
-        <thead>
+      <ReactCSSTransitionGroup
+        transitionName={{
+          enter: 'in',
+          leave: 'out'
+        }}
+        transitionEnterTimeout={280}
+        transitionLeaveTimeout={280}
+        component="table"
+        className={`ui very basic table ${this.props.className}`}
+      >
+        <thead className="ui animating transition fade right" key="head">
           <tr>
-            <th colSpan={5}>Name</th>
-            <th colSpan={1}>Price</th>
+            <th>Name</th>
+            <th>Price</th>
           </tr>
         </thead>
         {Object.keys(this.sortedProps).map((value: string) => {
           return(
-            <tbody key={value}>
-              <ProductCategoryRow category={value} />
+            <ReactCSSTransitionGroup
+              transitionName={{
+                enter: 'in',
+                leave: 'out'
+              }}
+              transitionEnterTimeout={280}
+              transitionLeaveTimeout={280}
+              component="tbody"
+              className="ui animating transition fade right"
+              key={value}
+            >
+              <ProductCategoryRow category={value} key={value} />
               {this.sortedProps[value].map((product) => {
-                return (<ProductRow product={product} key={product.name} />);
+                return (
+                  <ProductRow product={product}
+                              key={product.name}
+                  />
+                );
               })}
-            </tbody>
+            </ReactCSSTransitionGroup>
           );
         })}
-      </table>
+      </ReactCSSTransitionGroup>
     );
   }
 
-  // this.sortedProps = R.pipe<Array<Product>, Array<Product>, sortedProps>(
-  //   R.filter(({name}: Product) => !!R.match(new RegExp(searchText, 'i'), name)),
-  //   R.groupBy(({category}: Product) => category)
-  // )(products)
-  // pipe<V0, T1, T2>(fn0: (x0: V0) => T1, fn1: (x: T1) => T2): (x0: V0) => T2;
-  // pipe<V0, T1, T2, T3>(fn0: (x: V0) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3): (x: V0) => T3;
   private set_sorted_props(products: Array<Product>, searchText: string, onlyStocked: boolean): void {
     this.sortedProps = R.pipe<Array<Product>, Array<Product>, Array<Product>, sortedProps>(
-      R.filter(({name}: Product) => !!R.match(new RegExp(searchText, 'i'), name)),
       R.filter(({stocked}: Product) => stocked === onlyStocked || !onlyStocked),
+      R.filter(({name}: Product) => !!R.match(new RegExp(searchText, 'i'), name).length),
       R.groupBy(({category}: Product) => category)
     )(products);
   }

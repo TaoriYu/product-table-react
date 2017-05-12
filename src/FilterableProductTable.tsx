@@ -12,6 +12,8 @@ interface Is {
 }
 
 class FilterableProductTable extends React.Component <Ip, Is> {
+  private input: SearchBar;
+
   constructor() {
     super();
     this.state = {
@@ -21,6 +23,10 @@ class FilterableProductTable extends React.Component <Ip, Is> {
 
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
     this.handleCheckStocked = this.handleCheckStocked.bind(this);
+  }
+
+  componentDidMount() {
+    this.input.focus();
   }
 
   handleChangeSearch(e: React.SyntheticEvent<HTMLInputElement>): void  {
@@ -37,14 +43,18 @@ class FilterableProductTable extends React.Component <Ip, Is> {
 
   render() {
     return (
-      <div>
-        <SearchBar changeSearchText={this.handleChangeSearch}
-                   checkStocked={this.handleCheckStocked}
-        />
-        <ProductTable products={this.props.products}
-                      searchText={this.state.searchText}
-                      onlyStocked={this.state.onlyStocked}
-        />
+      <div className="ui text container">
+        <div className="tall stacked segment">
+          <SearchBar changeSearchText={this.handleChangeSearch}
+                     checkStocked={this.handleCheckStocked}
+                     ref={(ref) => this.input = ref}
+          />
+          <ProductTable products={this.props.products}
+                        searchText={this.state.searchText}
+                        onlyStocked={this.state.onlyStocked}
+                        className="transition animating fade"
+          />
+        </div>
       </div>
     );
   }

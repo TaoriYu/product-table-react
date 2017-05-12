@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './index.css';
+import '../semantic/dist/semantic.min.css';
 import FilterableProductTable from './FilterableProductTable';
 
 export interface Product {

@@ -14,9 +14,9 @@ class ProductRow extends React.Component <Ip, Is> {
     name = <span className={this.props.product.stocked ? '' : 'red'}>{this.props.product.name}</span>;
 
     return(
-      <tr>
-        <td colSpan={5}>{name}</td>
-        <td colSpan={1}>{this.props.product.price}</td>
+      <tr className="transition animating fade right">
+        <td>{name}</td>
+        <td>{this.props.product.price}</td>
       </tr>
     );
   }

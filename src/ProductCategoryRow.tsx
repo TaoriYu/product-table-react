@@ -8,8 +8,9 @@ interface Is {}
 class ProductCategoryRow extends React.Component <Ip, Is> {
   render() {
     return(
-      <tr>
-        <th colSpan={5}>{this.props.category}</th>
+      <tr className="active">
+        <th>{this.props.category}</th>
+        <th className="active"/>
       </tr>
     );
   }

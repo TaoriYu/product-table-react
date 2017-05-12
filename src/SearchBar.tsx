@@ -7,19 +7,34 @@ interface Ip {
 interface Is {}
 
 class SearchBar extends React.Component <Ip, Is> {
+  private textInput: HTMLInputElement;
+
+  constructor(props: Ip) {
+    super(props);
+  }
+
+  public focus() {
+    this.textInput.focus();
+  }
+
   render() {
     return(
-      <form>
-        <input type="text"
-               placeholder="search..."
-               onChange={this.props.changeSearchText}
-        />
-        <p>
-          <input type="checkbox"
-                 onChange={this.props.checkStocked}
+      <form className="ui form">
+        <div className="field">
+          <input type="text"
+                 placeholder="search..."
+                 onChange={this.props.changeSearchText}
+                 ref={(ref) => this.textInput = ref}
           />
-          Only show products in stock
-        </p>
+        </div>
+        <div className="field">
+          <div className="ui checkbox">
+            <input type="checkbox"
+                   onChange={this.props.checkStocked}
+            />
+            <label>Only show products in stock</label>
+          </div>
+        </div>
       </form>
     );
   }
