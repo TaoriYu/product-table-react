@@ -16,10 +16,6 @@ interface Is {}
 type sortedProps = { [p: string]: Array<Product> };
 
 class ProductTable extends React.Component <Ip, Is> {
-  static defaultProps = {
-    className: ''
-  };
-
   private sortedProps: sortedProps;
 
   constructor(props: Ip) {
